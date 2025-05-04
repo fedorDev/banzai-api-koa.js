@@ -18,7 +18,7 @@ export const reloadPoolData = async (pool, chain) => {
 
   let url = `https://api.${chain == 'eth' ? 'etherscan' : 'bscscan'}.io/v2/api?module=account`
   url += `&chainId=${chain == 'eth' ? '1' : '56'}`
-  url += `&action=txlistinternal&address=${pool.address}&page=1&offset=5&sort=desc`
+  url += `&action=txlistinternal&address=${pool.address}&page=1&offset=20&sort=desc`
   url += `&startblock=${startBlock[chain]}&apikey=${ETH_API_KEY}`
 
   // &startblock=0
@@ -41,6 +41,11 @@ export const reloadPoolData = async (pool, chain) => {
           chain: 'eth',
           timestamp: i.timeStamp*1,
           type: 'win',
+        }
+
+        if (d.value == `${pool.stake}` && !Number(i.isError)) {
+          d.type = 'stake' // internal tx stakes
+          result.push(d)
         }
 
         if (d.value == `${pool.stake*9}` && !Number(i.isError)) {
@@ -96,7 +101,7 @@ export const reloadBscData = async (pool) => {
   console.log('Started fetching BSC pool transactions', started)
 
   let url = `https://api.bscscan.com/api?module=account`
-  url += `&action=txlistinternal&address=${pool.address}&page=1&offset=5&sort=desc`
+  url += `&action=txlistinternal&address=${pool.address}&page=1&offset=20&sort=desc`
   url += `&startblock=${startBlock.bsc}&apikey=${BSC_API_KEY}`
 
   const req = await fetch(url).catch((err) => {
@@ -117,6 +122,11 @@ export const reloadBscData = async (pool) => {
           chain: 'bsc',
           timestamp: i.timeStamp*1,
           type: 'win',
+        }
+
+        if (d.value == `${pool.stake}` && !Number(i.isError)) {
+          d.type = 'stake' // internal tx stakes
+          result.push(d)
         }
 
         if (d.value == `${pool.stake*9}` && !Number(i.isError)) {
