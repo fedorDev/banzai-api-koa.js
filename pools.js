@@ -23,19 +23,19 @@ const poolsConfig = {
   "bsc": [
     {
       "title": "BSC Light",
-      "address": "0x16dBA25057DB95920aa8E6167B4bEf04582B66C4",
+      "address": "0x460D4b774fe559F88827f375c0ae1C0C2fe77B0f",
       "stake": 0.01,
       "stakeWei": "0x2386F26FC10000"
     },
     {
       "title": "BSC Bronze",
-      "address": "0x143BBC939350340F7e8FCE544568dac9d043E6Da",
+      "address": "0xd50b76e2c4205cCb89cB6461726C3033253b941f",
       "stake": 0.05,
       "stakeWei": "0xB1A2BC2EC50000"
     },
     {
       "title": "BSC Silver",
-      "address": "0xB86D6e3ba6e1EF397A5c3d8796f18D56360CC505",
+      "address": "0xCDeae25475e446DD467Ae31C04931D17013b60C4",
       "stake": 0.1,
       "stakeWei": "0x16345785D8A0000"
     }

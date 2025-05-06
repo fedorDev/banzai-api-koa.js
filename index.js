@@ -80,8 +80,10 @@ app.use(async ctx => {
 
     if (p && p != '' && addressMap[p]) {
       ctx.body = { transactions: cache[p] }
-      return true
+    } else {
+      ctx.body = { transactions: [] }
     }
+    return true
   }
 
   // default endpoint
