@@ -2,21 +2,15 @@ import 'dotenv/config'
 import { createWalletClient, createPublicClient, http, parseEther } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet, bsc } from 'viem/chains'
+import pools from './pools.js'
 import GameAbi from './abi/Game.js'
 import crypto from 'crypto'
+
+const INFURA_KEY = process.env.INFURA_KEY
 
 function getRandomNumber() {
   const buffer = crypto.randomBytes(1)
   return buffer[0]
-}
-
-const pools = {
-  eth: [],
-  bsc: [
-    '0x460D4b774fe559F88827f375c0ae1C0C2fe77B0f',
-    '0xd50b76e2c4205cCb89cB6461726C3033253b941f',
-    '0xCDeae25475e446DD467Ae31C04931D17013b60C4',
-  ],
 }
 
 // init account
@@ -24,24 +18,24 @@ const account = privateKeyToAccount(process.env.ORACLE_WALLET_KEY)
 
 const clientEth = createPublicClient({
   chain: mainnet,
-  transport: http()
+  transport: http(`https://mainnet.infura.io/v3/${INFURA_KEY}`)
 })
  
 const clientBsc = createPublicClient({
   chain: bsc,
-  transport: http()
+  transport: http(`https://bsc-mainnet.infura.io/v3/${INFURA_KEY}`)
 })
 
 const walletEth = createWalletClient({
   account,
   chain: mainnet,
-  transport: http()
+  transport: http(`https://mainnet.infura.io/v3/${INFURA_KEY}`)
 })
 
 const walletBsc = createWalletClient({
   account,
   chain: bsc,
-  transport: http()
+  transport: http(`https://bsc-mainnet.infura.io/v3/${INFURA_KEY}`)
 })
 
 const checkPoolEth = async (poolAddress) => {
@@ -82,8 +76,6 @@ const checkPoolBsc = async (poolAddress) => {
     functionName: 'showPool',
   })
 
-  console.log(poolAddress, 'POOL IS', data)
-
   if (data && data.length > 9) {
     const rand = getRandomNumber()
     console.log(poolAddress, 'pool is filled, will detectWinner()', rand)
@@ -112,11 +104,11 @@ const checkPoolsHandler = async () => {
   console.log('check game contracts...')
 
   for (const pool of pools.eth) {
-    await checkPoolEth(pool)
+    await checkPoolEth(pool.address)
   }
 
   for (const pool of pools.bsc) {
-    await checkPoolBsc(pool)
+    await checkPoolBsc(pool.address)
   }
 
   console.log('[+] check finished')

@@ -3,19 +3,19 @@ const poolsConfig = {
   "eth": [
     {
       "title": "ETH Light",
-      "address": "0xfd14BdD429f0Fe2D679f726A0E9D72cb0D0837B1",
+      "address": "0xFAC3dD91C9530aF4Db6B104058Ea573239866AA6",
       "stake": 0.01,
       "stakeWei": "0x2386F26FC10000"
     },
     {
       "title": "ETH Bronze",
-      "address": "0xD47774c6B5EB5012fA5D5AF88966B4c1043BBD2f",
+      "address": "0xEFEDD851B15D9F02a2b99A7dede830be3e50E737",
       "stake": 0.05,
       "stakeWei": "0xB1A2BC2EC50000"
     },
     {
       "title": "ETH Silver",
-      "address": "0x0A6d2CFE07C6a070F8a9aB365594F2fD0DcC9c7A",
+      "address": "0x7eF99FE708e2C910Dd8D297049Fc45e00c5d8854",
       "stake": 0.1,
       "stakeWei": "0x16345785D8A0000"
     }
