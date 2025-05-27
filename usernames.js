@@ -47,6 +47,7 @@ const usernames = {
   '0x60e9012f5fc5faf3739a0099f5dc13b6eaaf4e41': 'luppyqueen',
   '0x85a2205957cdea0421fc2f620331779766158460': '0xkbub',
   '0xaf373d0fb4d14ea88b3347264cdabf9d99ec73a9': 'w1neasy_',
+  '0xd006cc0bd217360574ae5e0e34289be916717108': 'ansynt_',
 }
 
 export default usernames

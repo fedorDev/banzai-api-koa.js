@@ -18,6 +18,11 @@ const poolsConfig = {
       "address": "0x7eF99FE708e2C910Dd8D297049Fc45e00c5d8854",
       "stake": 0.1,
       "stakeWei": "0x16345785D8A0000"
+    },
+    {
+      "title": "ETH Gold v2",
+      "address": "0xb33e84B83E8ACF3450478c316Df95312d8B2953F",
+      "stake": 0.3,
     }
   ],
   "bsc": [
@@ -38,6 +43,11 @@ const poolsConfig = {
       "address": "0xCDeae25475e446DD467Ae31C04931D17013b60C4",
       "stake": 0.1,
       "stakeWei": "0x16345785D8A0000"
+    },
+    {
+      "title": "BSC Gold",
+      "address": "0x2762cD88F139c361E8AdB09591dCE4624e3bAc3d",
+      "stake": 0.3,
     }
   ],
   "sol": []
