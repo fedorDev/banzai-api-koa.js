@@ -10,7 +10,7 @@ import {
   reloadWinnersBsc,
   countProfit,
 } from './lib.js'
-import usernames from './usernames.js'
+import knex from 'knex'
 
 const PORT = 8081
 
@@ -25,8 +25,47 @@ let leaderboard = []
 
 let upd = 0
 
+const db = knex({
+  client: 'mysql2',
+  connection: {
+    socketPath: '/var/lib/mysql/mysql.sock',
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASS,
+    database: 'banzai',
+  },
+});
+
 const reloadLeaderboard = async () => {
   let list = []
+
+  const req = await fetch('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH,BNB,SOL', {
+    headers: {
+      'X-CMC_PRO_API_KEY': process.env.COINMARKET_API_KEY,
+    },
+  }).catch((err) => {
+    console.log('failed', err)
+    return false
+  })
+
+  const rates = {}
+  
+  if (!req || !req.ok) return false
+  const response = await req.json()
+  Object.keys(response.data).forEach((ticker) => {
+    const k = ticker.toLowerCase()
+
+    if (response.data[ticker].quote && response.data[ticker].quote.USD.price) {
+      rates[k] = response.data[ticker].quote.USD.price
+
+      db('rates').where('ticker', '=', k).update({
+        price: response.data[ticker].quote.USD.price
+      }).then(() => console.log('saved rate into mysql'))
+    }
+  })
+  console.log('rates were updated in database')
+
+  // clear table
+  db('winners').where('address', '!=', 'null').del()
 
   // first eth
   const pools = poolsConf.eth
@@ -35,6 +74,14 @@ const reloadLeaderboard = async () => {
     if (data && data.length > 0) {
       list = list.concat(data)
     }
+
+    data.forEach((item) => {
+      db('winners').insert({
+        address: item.to.toLowerCase(),
+        rounds: 1,
+        profit_eth: item.value,
+      }).then(() => console.log('Save WINNER to mysql'))
+    })
 
     await new Promise((resolve) => {
       setTimeout(() => resolve(true), 1000)
@@ -47,6 +94,14 @@ const reloadLeaderboard = async () => {
     if (data && data.length > 0) {
       list = list.concat(data)
     }
+
+    data.forEach((item) => {
+      db('winners').insert({
+        address: item.to.toLowerCase(),
+        rounds: 1,
+        profit_bnb: item.value,
+      }).then(() => console.log('Save WINNER to mysql'))
+    })
 
     await new Promise((resolve) => {
       setTimeout(() => resolve(true), 1000)
@@ -65,7 +120,6 @@ const reloadLeaderboard = async () => {
     leaders.push({
       address: addr,
       rounds: item.length,
-      username: usernames[addr] || false,
       profits: countProfit(item),
     })
   })
