@@ -9,8 +9,10 @@ import crypto from 'crypto'
 const INFURA_KEY = process.env.INFURA_KEY
 
 function getRandomNumber() {
-  const buffer = crypto.randomBytes(1)
-  return buffer[0]
+  const buffer = crypto.randomBytes(2)
+  const hexString = buffer.toString('hex')
+
+  return parseInt(hexString, 16)
 }
 
 // init account
@@ -114,5 +116,10 @@ const checkPoolsHandler = async () => {
   console.log('[+] check finished')
 }
 
+console.log(getRandomNumber())
+console.log(getRandomNumber())
+console.log(getRandomNumber())
+
+checkPoolsHandler()
 setInterval(checkPoolsHandler, 5*60*1000) // every 5 mins
 console.log('Started loop...')
