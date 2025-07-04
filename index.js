@@ -65,7 +65,7 @@ const reloadLeaderboard = async () => {
   console.log('rates were updated in database')
 
   // clear table
-  db('winners').where('address', '!=', 'null').del()
+  await db('winners').where('address', '!=', 'null').del()
 
   // first eth
   const pools = poolsConf.eth
