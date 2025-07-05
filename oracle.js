@@ -12,7 +12,7 @@ function getRandomNumber() {
   const buffer = crypto.randomBytes(2)
   const hexString = buffer.toString('hex')
 
-  return parseInt(hexString, 16)
+  return parseInt(hexString, 16) % 1000
 }
 
 // init account
@@ -40,14 +40,14 @@ const walletBsc = createWalletClient({
   transport: http(`https://bsc-mainnet.infura.io/v3/${INFURA_KEY}`)
 })
 
-const checkPoolEth = async (poolAddress) => {
+const checkPoolEth = async (poolAddress, maxPlayers) => {
   const data = await clientEth.readContract({
     address: poolAddress,
     abi: GameAbi,
     functionName: 'showPool',
   })
 
-  if (data && data.length > 9) {
+  if (data && data.length >= maxPlayers) {
     const rand = getRandomNumber()
     console.log(poolAddress, 'pool is filled, will detectWinner()', rand)
 
@@ -71,14 +71,14 @@ const checkPoolEth = async (poolAddress) => {
   }
 }
 
-const checkPoolBsc = async (poolAddress) => {
+const checkPoolBsc = async (poolAddress, maxPlayers) => {
   const data = await clientBsc.readContract({
     address: poolAddress,
     abi: GameAbi,
     functionName: 'showPool',
   })
 
-  if (data && data.length > 9) {
+  if (data && data.length >= maxPlayers) {
     const rand = getRandomNumber()
     console.log(poolAddress, 'pool is filled, will detectWinner()', rand)
 
@@ -106,11 +106,11 @@ const checkPoolsHandler = async () => {
   console.log('check game contracts...')
 
   for (const pool of pools.eth) {
-    await checkPoolEth(pool.address)
+    await checkPoolEth(pool.address, pool.players)
   }
 
   for (const pool of pools.bsc) {
-    await checkPoolBsc(pool.address)
+    await checkPoolBsc(pool.address, pool.players)
   }
 
   console.log('[+] check finished')
@@ -119,6 +119,19 @@ const checkPoolsHandler = async () => {
 console.log(getRandomNumber())
 console.log(getRandomNumber())
 console.log(getRandomNumber())
+
+const testVal = async () => {
+  const rand = getRandomNumber()
+  console.log('TEST rand', rand, typeof rand)
+
+  const hash = await walletBsc.sendTransaction({ 
+  // account,
+    to: '0x90fe1986092Ec963C4e9368837D02CB297f545Fe',
+    value: rand,
+  })
+}
+
+// testVal()
 
 checkPoolsHandler()
 setInterval(checkPoolsHandler, 5*60*1000) // every 5 mins

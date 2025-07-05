@@ -17,7 +17,7 @@ const clientEth = createPublicClient({
   chain: mainnet,
   transport: http(`https://mainnet.infura.io/v3/${INFURA_KEY}`)
 })
- 
+
 const clientBsc = createPublicClient({
   chain: bsc,
   transport: http(`https://bsc-mainnet.infura.io/v3/${INFURA_KEY}`)
@@ -82,7 +82,7 @@ export const reloadWinners = async (pool, chain) => {
           type: 'win',
         }
 
-        if (d.value == `${pool.stake*9}` && !Number(i.isError)) {
+        if (d.value == `${pool.prize}` && !Number(i.isError)) {
           winners.push(d)
         }
       })
@@ -127,7 +127,7 @@ export const reloadWinnersBsc = async (pool) => {
           type: 'win',
         }
 
-        if (d.value == `${pool.stake*9}` && !Number(i.isError)) {
+        if (d.value == `${pool.prize}` && !Number(i.isError)) {
           winners.push(d)
         }
       })
@@ -179,7 +179,7 @@ export const reloadPoolData = async (pool, chain) => {
           result.push(d)
         }
 
-        if (d.value == `${pool.stake*9}` && !Number(i.isError)) {
+        if (d.value == `${pool.prize}` && !Number(i.isError)) {
           result.push(d)
           winners.push(d)
         }
@@ -261,9 +261,9 @@ export const reloadBscData = async (pool) => {
           result.push(d)
         }
 
-        if (d.value == `${pool.stake*9}` && !Number(i.isError)) {
+        if (d.value == `${pool.prize}` && !Number(i.isError)) {
           result.push(d)
-          winners.push(d)          
+          winners.push(d)
         }
       })
     }

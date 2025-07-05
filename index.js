@@ -87,7 +87,7 @@ const reloadLeaderboard = async () => {
       setTimeout(() => resolve(true), 1000)
     })
   }
- 
+
   const poolsBsc = poolsConf.bsc
   for (const pool of poolsBsc) {
     const data = await reloadWinnersBsc(pool)
@@ -193,6 +193,7 @@ initMap()
 setInterval(reloadCache, 20*1000) // every 20 sec
 setInterval(reloadLeaderboard, 4*60*60*1000) // every 4 hours
 
+reloadCache()
 reloadLeaderboard()
 
 app.use(async ctx => {
