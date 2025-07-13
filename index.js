@@ -19,6 +19,7 @@ const app = new Koa()
 const addressMap = {}
 const cache = {}
 let winnersCache = []
+let winnersFullList = []
 const lastUpdated = {}
 const activityMap = {}
 let leaderboard = []
@@ -67,6 +68,7 @@ const reloadLeaderboard = async () => {
   // clear table
   await db('winners').where('address', '!=', 'null').del()
 
+  const batch = []
   // first eth
   const pools = poolsConf.eth
   for (const pool of pools) {
@@ -75,13 +77,13 @@ const reloadLeaderboard = async () => {
       list = list.concat(data)
     }
 
-    data.forEach((item) => {
-      db('winners').insert({
+    for (const item of data) {
+      batch.push({
         address: item.to.toLowerCase(),
         rounds: 1,
         profit_eth: item.value,
-      }).then(() => console.log('Save WINNER to mysql'))
-    })
+      })
+    }
 
     await new Promise((resolve) => {
       setTimeout(() => resolve(true), 1000)
@@ -95,19 +97,25 @@ const reloadLeaderboard = async () => {
       list = list.concat(data)
     }
 
-    data.forEach((item) => {
-      db('winners').insert({
+    for (const item of data) {
+      batch.push({
         address: item.to.toLowerCase(),
         rounds: 1,
         profit_bnb: item.value,
-      }).then(() => console.log('Save WINNER to mysql'))
-    })
+      })
+    }
 
     await new Promise((resolve) => {
       setTimeout(() => resolve(true), 1000)
     })
   }
 
+  while (batch.length > 0) {
+    const pack = batch.splice(0, 10)
+    await db('winners').insert(pack).then(() => console.log('save pack of winners', pack.length))
+  }
+
+  winnersFullList = list // raw
   const sortedData = _(list)
     .groupBy('to')
     .orderBy((item) => item.length, ['desc'])
@@ -205,7 +213,12 @@ app.use(async ctx => {
   }
 
   if (ctx.path.includes('/winners')) {
-    ctx.body = { winners: winnersCache }
+    ctx.body = { winners: winnersCache, count: winnersCache.length }
+    return true
+  }
+
+  if (ctx.path.includes('/winners-full')) {
+    ctx.body = { winners: winnersFullList, count: winnersFullList.length }
     return true
   }
 
