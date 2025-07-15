@@ -212,12 +212,12 @@ app.use(async ctx => {
     return true
   }
 
-  if (ctx.path.includes('/winners')) {
+  if (ctx.path == '/winners') {
     ctx.body = { winners: winnersCache, count: winnersCache.length }
     return true
   }
 
-  if (ctx.path.includes('/winners-full')) {
+  if (ctx.path == '/winners/full') {
     ctx.body = { winners: winnersFullList, count: winnersFullList.length }
     return true
   }
