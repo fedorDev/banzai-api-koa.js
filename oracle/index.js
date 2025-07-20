@@ -35,6 +35,11 @@ const initConsumer = async () => {
   const connection = await amqp.connect('amqp://localhost')
   const channel = await connection.createChannel()
   await channel.assertQueue('detect-winner', { durable: false })
+  await channel.assertQueue('heartbeat', { durable: false })
+
+  channel.consume('heartbeat', function(msg) {
+    console.log('Pong!')
+  })
 
   channel.consume('detect-winner', async function(msg) {
     const rand = getRandomNumber()
