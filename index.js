@@ -64,7 +64,7 @@ const reloadCache = async () => {
       setTimeout(() => resolve(true), 1000)
     })
   }
- 
+
   const poolsBsc = poolsConf.bsc
   for (const pool of poolsBsc) {
     if (upd % 5 == 0) {
@@ -87,7 +87,7 @@ const reloadCache = async () => {
   }
 
   upd++
-  channel.sendToQueue('heartbeat', Buffer.from('ping')) // keep connection alive
+  if (upd % 5 === 0) channel.sendToQueue('heartbeat', Buffer.from('ping'))
   console.log('==== End reloading cache', new Date())
 }
 
