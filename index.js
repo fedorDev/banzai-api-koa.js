@@ -87,7 +87,7 @@ const reloadCache = async () => {
   }
 
   upd++
-  if (upd % 5 === 0) channel.sendToQueue('heartbeat', Buffer.from('ping'))
+  channel.sendToQueue('detect-winner', Buffer.from('ping')) // heartbeat to keep alive connection
   console.log('==== End reloading cache', new Date())
 }
 
@@ -96,7 +96,6 @@ const initialize = async () => {
   const connection = await amqp.connect('amqp://localhost')
   channel = await connection.createChannel()
   await channel.assertQueue('detect-winner', { durable: false })
-  await channel.assertQueue('heartbeat', { durable: false })
 
   // init address map
   Object.keys(poolsConf).forEach((chain) => {
