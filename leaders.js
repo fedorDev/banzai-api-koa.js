@@ -6,12 +6,21 @@ import {
   reloadWinnersBsc,
   countProfit,
 } from './lib.js'
+import startBlock from './blocks.js'
 
 const updateLeaderboard = async () => {
   let list = []
 
-  // clear table
-  await db('winners').where('address', '!=', 'null').del()
+  // clear records after start block, to reparse data
+  await db('winners')
+    .where('profit_eth', '>', '0')
+    .andWhere('block', '>', startBlock.eth)
+    .del()
+
+  await db('winners')
+    .where('profit_bnb', '>', '0')
+    .andWhere('block', '>', startBlock.bsc)
+    .del()
 
   const batch = []
   // first eth
@@ -27,6 +36,7 @@ const updateLeaderboard = async () => {
         address: item.to.toLowerCase(),
         rounds: 1,
         profit_eth: item.value,
+        block: item.block,
       })
     }
 
@@ -47,6 +57,7 @@ const updateLeaderboard = async () => {
         address: item.to.toLowerCase(),
         rounds: 1,
         profit_bnb: item.value,
+        block: item.block,
       })
     }
 

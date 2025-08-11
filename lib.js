@@ -2,13 +2,9 @@ import _ from 'lodash'
 import { createPublicClient, http, parseEther, formatEther } from 'viem'
 import { mainnet, bsc } from 'viem/chains'
 import GameAbi from './abi/Game.js'
+import startBlock from './blocks.js'
 
 const INFURA_KEY = process.env.INFURA_KEY
-
-const startBlock = {
-  eth: 22185982,
-  bsc: 48022467,
-}
 
 const ETH_API_KEY = process.env.ETH_API_KEY
 const BSC_API_KEY = process.env.BSC_API_KEY
