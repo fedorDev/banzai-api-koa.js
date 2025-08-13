@@ -49,9 +49,9 @@ export const reloadWinners = async (pool, chain) => {
   const winners = []
 
   const started = new Date()
-  console.log('Started fetching ETH pool payout transactions', started)
+  console.log('Started fetching pool payout transactions', chain, started)
 
-  let url = `https://api.${chain == 'eth' ? 'etherscan' : 'bscscan'}.io/v2/api?module=account`
+  let url = `https://api.etherscan.io/v2/api?module=account`
   url += `&chainId=${chain == 'eth' ? '1' : '56'}`
   url += `&action=txlistinternal&address=${pool.address}&page=1&offset=400&sort=desc`
   url += `&startblock=${startBlock[chain]}&apikey=${ETH_API_KEY}`
@@ -59,7 +59,7 @@ export const reloadWinners = async (pool, chain) => {
   // &startblock=0
   // &endblock=2702578
   const req = await fetch(url).catch((err) => {
-    console.log('FAILED InternalTXs update')
+    console.log('FAILED InternalTXs update', err)
     return false
   })
 
@@ -104,7 +104,7 @@ export const reloadWinnersBsc = async (pool) => {
   // &startblock=0
   // &endblock=2702578
   const req = await fetch(url).catch((err) => {
-    console.log('FAILED InternalTXs update')
+    console.log('FAILED InternalTXs update', err)
     return false
   })
 
@@ -141,22 +141,23 @@ export const reloadPoolData = async (pool, chain) => {
   const winners = []
 
   const started = new Date()
-  console.log('Started fetching ETH pool transactions', started)
+  console.log('Started fetching pool transactions', chain, started)
 
-  let url = `https://api.${chain == 'eth' ? 'etherscan' : 'bscscan'}.io/v2/api?module=account`
-  url += `&chainId=${chain == 'eth' ? '1' : '56'}`
+  let url = `https://api.etherscan.io/v2/api?module=account`
+  url += `&chainid=${chain == 'eth' ? '1' : '56'}`
   url += `&action=txlistinternal&address=${pool.address}&page=1&offset=20&sort=desc`
-  url += `&startblock=${startBlock[chain]}&apikey=${ETH_API_KEY}`
+  // url += `&startblock=${startBlock[chain]}`
+  url += `&apikey=${ETH_API_KEY}`
 
-  // &startblock=0
-  // &endblock=2702578
   const req = await fetch(url).catch((err) => {
-    console.log('FAILED InternalTXs update')
+    console.log('FAILED InternalTXs update reloadPoolData', err)
     return false
   })
 
   if (req && req.ok) {
     const data = await req.json()
+    console.log('GOTCHA ', data)
+
     if (data.result && data.message != 'NOTOK') {
       data.result.forEach((i) => {
         const d = {
@@ -165,7 +166,7 @@ export const reloadPoolData = async (pool, chain) => {
           block: i.blockNumber,
           from: i.from,
           to: i.to,
-          chain: 'eth',
+          chain,
           timestamp: i.timeStamp*1,
           type: 'win',
         }
@@ -184,12 +185,12 @@ export const reloadPoolData = async (pool, chain) => {
   }
 
   let urlTx = `https://api.etherscan.io/v2/api?module=account`
-  urlTx += `&chainId=${chain == 'eth' ? '1' : '56'}`
+  urlTx += `&chainid=${chain == 'eth' ? '1' : '56'}`
   urlTx += `&action=txlist&address=${pool.address}&page=1&offset=20&sort=desc`
   urlTx += `&startblock=${startBlock[chain]}&apikey=${ETH_API_KEY}`
 
   const reqTx = await fetch(urlTx).catch((err) => {
-    console.log('FAILED TXs update')
+    console.log('FAILED TXs update, reloadPoolData', err)
     return false
   })
 
@@ -214,6 +215,7 @@ export const reloadPoolData = async (pool, chain) => {
 
   const ended = new Date()
   console.log('ended fetching', ended)
+  console.log('FETCHED TX', result)
   return {
     tx: _.orderBy(result, ['timestamp'], ['desc']).slice(0, 16),
     winners,

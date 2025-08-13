@@ -47,7 +47,7 @@ const updateLeaderboard = async () => {
 
   const poolsBsc = poolsConf.bsc
   for (const pool of poolsBsc) {
-    const data = await reloadWinnersBsc(pool)
+    const data = await reloadWinners(pool, 'bsc')
     if (data && data.length > 0) {
       list = list.concat(data)
     }

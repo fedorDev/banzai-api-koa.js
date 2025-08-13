@@ -75,7 +75,7 @@ const reloadCache = async () => {
       activityMap[pool.address] = players
     }
 
-    const data = await reloadBscData(pool)
+    const data = await reloadPoolData(pool, 'bsc')
     if (data && data.tx) {
       cache[pool.address] = data.tx
       lastUpdated[pool.address] = new Date()
