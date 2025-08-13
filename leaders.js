@@ -6,7 +6,7 @@ import {
   reloadWinnersBsc,
   countProfit,
 } from './lib.js'
-import startBlock from './blocks.js'
+import { startBlock }from './blocks.js'
 
 const updateLeaderboard = async () => {
   let list = []
