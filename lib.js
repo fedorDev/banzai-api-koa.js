@@ -111,7 +111,6 @@ export const reloadPoolData = async (pool, chain) => {
 
   if (req && req.ok) {
     const data = await req.json()
-    console.log('GOTCHA ', data)
 
     if (data.result && data.message != 'NOTOK') {
       data.result.forEach((i) => {

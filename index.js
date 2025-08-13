@@ -143,7 +143,7 @@ app.use(async ctx => {
     const p = ctx.path.split('/tx/').pop()
 
     if (p && p != '' && addressMap[p]) {
-      ctx.body = { transactions: cache[p] }
+      ctx.body = { transactions: cache[p] || [] }
     } else {
       ctx.body = { transactions: [] }
     }
