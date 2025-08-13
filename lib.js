@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { createPublicClient, http, parseEther, formatEther } from 'viem'
+import { createPublicClient, http, formatEther } from 'viem'
 import { mainnet, bsc } from 'viem/chains'
 import GameAbi from './abi/Game.js'
 import { startBlock, initBlock } from './blocks.js'

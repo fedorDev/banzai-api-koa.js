@@ -5,7 +5,6 @@ import poolsConf from './pools.js'
 import _ from 'lodash'
 import {
   reloadPoolData,
-  reloadBscData,
   checkPoolState,
 } from './lib.js'
 import updateRates from './rates.js'

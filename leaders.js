@@ -3,7 +3,6 @@ import poolsConf from './pools.js'
 import _ from 'lodash'
 import {
   reloadWinners,
-  reloadWinnersBsc,
   countProfit,
 } from './lib.js'
 import { startBlock }from './blocks.js'
