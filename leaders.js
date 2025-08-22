@@ -7,7 +7,20 @@ import {
 } from './lib.js'
 import { startBlock }from './blocks.js'
 
-const updateLeaderboard = async () => {
+export const getLastWinners = async () => {
+  const list = await db('winners')
+    .select('address', 'profit_eth', 'profit_bnb')
+    .orderBy('id', 'desc')
+    .limit(16)
+    .catch((err) => {
+      console.error(err)
+      return []
+    })
+
+  return list
+}
+
+export const updateLeaderboard = async () => {
   let list = []
 
   // clear records after start block, to reparse data
@@ -91,6 +104,4 @@ const updateLeaderboard = async () => {
     leaders,
   }
 }
-
-export default updateLeaderboard
   

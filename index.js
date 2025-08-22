@@ -8,7 +8,7 @@ import {
   checkPoolState,
 } from './lib.js'
 import updateRates from './rates.js'
-import updateLeaderboard from './leaders.js'
+import { updateLeaderboard, getLastWinners } from './leaders.js'
 
 const PORT = 8081
 
@@ -32,8 +32,7 @@ const reloadData = async () => {
 
   // update leaderboard
   const lst = await updateLeaderboard()
-  winnersFullList = lst.full || []
-  winnersCache = _.orderBy(winnersFullList, ['timestamp'], ['desc']).slice(0, 16)
+  winnersCache = await getLastWinners()
   leaderboard = lst.leaders || []
 }
 
