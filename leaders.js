@@ -17,7 +17,21 @@ export const getLastWinners = async () => {
       return []
     })
 
-  return list
+  return list.map((item) => {
+    if (item.profit_eth > 0) {
+      return {
+        address: item.address,
+        profit: item.profit_eth,
+        chain: 'eth',
+      }
+    }
+
+    return {
+      address: item.address,
+      profit: item.profit_bnb,
+      chain: 'bsc',
+    }
+  })
 }
 
 export const updateLeaderboard = async () => {
